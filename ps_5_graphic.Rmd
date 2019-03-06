@@ -28,7 +28,7 @@ q5 %>%
   mutate(date = cut(date, breaks = "quarters"))
 
 
-  select(employer, date, amount, party)
+  
   
   
 ```

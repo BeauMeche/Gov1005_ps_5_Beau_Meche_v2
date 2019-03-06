@@ -79,12 +79,17 @@ q2 <- x %>%
   group_by(party) %>%
   summarize(party_cash = sum(cash)) %>%
   arrange(desc(party_cash)) %>%
+  mutate(party = case_when(party == "IND" ~ "Independent", 
+                           party == "Republican" ~ "Republican",
+                           party == "Democrat" ~ "Democrat",
+                           party == "OTH" ~ "Other", 
+                           party == "LIB" ~ "Libertarian")) %>%
   head(5) %>%
   gt() %>%
   fmt_currency(vars(party_cash), currency = "USD") %>%
   cols_label(party = "Party", 
              party_cash = "Donation Totals") %>%
-  tab_header("Donations to the 5 Largest Parties in USD") %>%
+  tab_header("Donations to the 5 Largest Parties (in USD)") %>%
   tab_source_note("Data courtesy of the FEC")
 q2
 ```
@@ -112,6 +117,7 @@ step1 <- w %>%
     TRUE ~ "Other")) %>%
   group_by(cmte_party) %>%
   summarize(committees = n_distinct(cmte_id), candidates = n_distinct(cand_id)) %>%
+  arrange(desc(committees)) %>%
   ungroup() %>%
   gt() %>%
   cols_label(cmte_party = "Party", 
@@ -120,7 +126,6 @@ step1 <- w %>%
   tab_header("Committees and Candidates  by Party") %>%
   tab_source_note("Data courtesy of the FEC")
 step1
-#test
 ```
 
 
