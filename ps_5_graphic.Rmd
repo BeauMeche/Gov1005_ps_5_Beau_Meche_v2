@@ -25,7 +25,14 @@ q5 %>%
   mutate(party = case_when(party %in% c("REP", "rep", "Rep") ~ "Republican", 
                              party %in% c("DEM", "Dem", "dem") ~ "Democrat")) %>%
   mutate(date = parse_date(date, format = "%m %d %Y")) %>%
-  mutate(date = cut(date, breaks = "quarters"))
+  mutate(date = cut(date, breaks = "quarters")) %>%
+  select(date, occupation, party, amount) %>%
+  filter(!is.na(party)) %>%
+  group_by(occupation) %>%
+  summarize(amount = sum(amount)) %>%
+  arrange(desc(amount)) %>%
+  ggplot(aes(x = date, y = amount)) + geom_point()
+  
 
 
   
