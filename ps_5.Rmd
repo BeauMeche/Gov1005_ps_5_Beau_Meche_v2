@@ -63,15 +63,22 @@ ML2 <- x %>%
   # "stick" the names back together in a homogeneous form
   mutate(full_name = paste(first_n, last_n)) %>%
   ungroup() %>%
+  # select the row with the value we want, the variable can be accessed in the inline code later
   slice(5)
 
 ML3 <- x %>%
+  # fix the capitalization to be normal in a new column
   mutate(nice_name = str_to_title(cand_name)) %>%
+  # break the 1st and last names into cols
   separate(nice_name, into = c("last_n", "first_n"), sep = ",") %>%
+  # find length of the last name
   mutate(name_length = str_length(last_n)) %>%
+  # look at the longest surnames
   arrange(desc(name_length)) %>%
+  # paste the names back together in readable form for display later
   mutate(full_name = paste(first_n, last_n)) %>%
   ungroup() %>%
+  # select the row with the value we want, the variable can be accessed in the inline code later
   slice(1)
 ```
 The state with the 3rd most rows is `r ML1$cand_state`.
@@ -83,22 +90,31 @@ The candidate with the longest last name is `r ML3$full_name`.
 #Question 2
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 q2 <- x %>%
+  # "collapse" all of the entries that are labeled with different syntactical forms of an abbreviation for the respective parties
   mutate(party = fct_collapse(party,
-                "Republican" = c("REP", "Rep"),
+                "Republican" = c("REP", "Rep", "rep"),
                 "Democrat" = c("DEM", "Dem", "DFL"))) %>%
+  # we want this part of the data to be organized by party
   group_by(party) %>%
+  # find the aggregate end-cash holdings
   summarize(party_cash = sum(cash)) %>%
+  # look at teh biggest holders
   arrange(desc(party_cash)) %>%
+  # label the rows nicely
   mutate(party = case_when(party == "IND" ~ "Independent", 
                            party == "Republican" ~ "Republican",
                            party == "Democrat" ~ "Democrat",
                            party == "OTH" ~ "Other", 
                            party == "LIB" ~ "Libertarian")) %>%
+  # grab the first 5 rows
   head(5) %>%
+  # make a table
   gt() %>%
+  # add the "$" and appropriate decimal for the currency
   fmt_currency(vars(party_cash), currency = "USD") %>%
+  # label the table appropriately
   cols_label(party = "Party", 
-             party_cash = "Donation Totals") %>%
+             party_cash = "Total Donated") %>%
   tab_header("Total Donations to the 5 Largest Parties (USD)") %>%
   tab_source_note("Source data courtesy of the FEC")
 q2
