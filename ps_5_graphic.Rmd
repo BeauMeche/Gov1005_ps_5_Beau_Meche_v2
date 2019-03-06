@@ -30,10 +30,13 @@ q5<- data5 %>%
   mutate(date = parse_date(date, format = "%m %d %Y")) %>%
   mutate(date = cut(date, breaks = "quarters")) %>%
   select(date, occupation, party, amount) %>%
-  group_by(occupation) %>%
-  mutate(amt = sum(amount)) %>%
-  arrange(desc(amt))%>%
-  ggplot(aes(x = date, y = amount, color = party), show.legend = FALSE) + geom_jitter(aes(size = amt)) + scale_y_log10()
+  ggplot(aes(x = date, y = amount, color = party)) + geom_jitter(aes(size = amount), show.legend = FALSE) +               scale_y_log10() + scale_color_manual(breaks = c("8", "6", "4"),
+                        values=c("blue", "green", "red")) +
+  labs(title = "Harvard Employee Constituency '05-'06", 
+       subtitle = "by quarter", 
+       caption = "Source data courtesy of the FEC")+
+  xlab("Date of Donation") +
+  ylab("Amount Donated (USD)")
 q5
 
 

@@ -90,7 +90,7 @@ q2 <- x %>%
   cols_label(party = "Party", 
              party_cash = "Donation Totals") %>%
   tab_header("Donations to the 5 Largest Parties (in USD)") %>%
-  tab_source_note("Data courtesy of the FEC")
+  tab_source_note("Source data courtesy of the FEC")
 q2
 ```
 
@@ -124,7 +124,7 @@ step1 <- w %>%
              committees = "Comittees", 
              candidates = "Candidates") %>%
   tab_header("Committees and Candidates  by Party") %>%
-  tab_source_note("Data courtesy of the FEC")
+  tab_source_note("Source data courtesy of the FEC")
 step1
 ```
 
@@ -178,7 +178,7 @@ blend1 <- blend %>%
     gt() %>%
     cols_label(date = "Qtr. Date") %>%
     tab_header("Harvard Professors' Donation Count by Party") %>%
-    tab_source_note("Data courtesy of the FEC")
+    tab_source_note("Source data courtesy of the FEC")
 ```
 
 
