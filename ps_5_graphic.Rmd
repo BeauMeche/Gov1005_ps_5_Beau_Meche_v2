@@ -19,7 +19,7 @@ library(lubridate)
 data5 <- read_rds("Join2.rds")
 ```
 
-```{r}
+```{r echo=FALSE}
 q5<- data5 %>%
   filter(employer == "HARVARD UNIVERSITY") %>%
   filter(!is.na(party)) %>%
