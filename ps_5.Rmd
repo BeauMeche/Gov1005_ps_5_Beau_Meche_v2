@@ -101,7 +101,7 @@ download.file(url = "https://www.fec.gov/files/bulk-downloads/2006/cm06.zip",
               destfile = "cm06.zip", 
               mode = "wb")
 
-w <- read_delim("cm06.zip", delim = "|", col_names = FALSE) %>%
+w <- read_delim("cm06.zip", delim = "|", col_names = FALSE, escape_double = TRUE) %>%
   transmute(cand_id = X15,
             cmte_id = X1,
             cmte_party = X11)
@@ -110,7 +110,7 @@ file_delete("cm06.zip")
 
 ```{r echo=FALSE}
 step1 <- w %>% 
-    filter(!is.na(cand_id)) %>%
+    filter(!is.na(cmte_party)) %>%
     mutate(cmte_party = case_when(
     cmte_party %in% c("REP", "rep", "Rep") ~ "Republican", 
     cmte_party %in% c("DEM", "Dem", "dem") ~ "Democrat", 
@@ -157,7 +157,6 @@ blend1 <- blend %>%
   # store the data for the next question via Rpubs
   write_rds(join2, "Join2.rds")
 ```
-
 
 ```{r echo=FALSE}
   join2 %>%
