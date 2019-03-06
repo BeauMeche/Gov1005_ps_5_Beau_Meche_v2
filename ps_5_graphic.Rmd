@@ -1,0 +1,37 @@
+---
+title: "ps_5_graphic"
+author: "Beau Meche"
+date: "March 5, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(janitor)
+library(gt)
+library(fs)
+library(lubridate)
+```
+
+```{r cache=TRUE, echo=FALSE}
+q5 <- read_rds("Join2.rds")
+```
+
+```{r}
+q5 %>%
+  filter(employer == "HARVARD UNIVERSITY") %>%
+  mutate(party = case_when(party %in% c("REP", "rep", "Rep") ~ "Republican", 
+                             party %in% c("DEM", "Dem", "dem") ~ "Democrat")) %>%
+  mutate(date = parse_date(date, format = "%m %d %Y")) %>%
+  mutate(date = cut(date, breaks = "quarters"))
+
+
+  select(employer, date, amount, party)
+  
+  
+```
+
+
+
