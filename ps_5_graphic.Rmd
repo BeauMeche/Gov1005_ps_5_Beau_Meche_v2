@@ -22,27 +22,25 @@ data5 <- read_rds("Join2.rds")
 ```{r echo=FALSE}
 q5<- data5 %>%
   filter(employer == "HARVARD UNIVERSITY") %>%
-  filter(!is.na(party)) %>%
+  # filter(!is.na(party)) %>%
   mutate(party = case_when(party %in% c("REP", "rep", "Rep") ~ "Republican", 
-                           party %in% c("DEM", "Dem", "dem") ~ "Democrat",
+                           party %in% c("DEM", "Dem", "dem") ~ "Democrat", 
+                           !is.na(party) ~ "Non-Partisan",
                            TRUE ~ "Other"
                            )) %>%
   mutate(date = parse_date(date, format = "%m %d %Y")) %>%
   mutate(date = cut(date, breaks = "quarters")) %>%
   select(date, occupation, party, amount) %>%
-  ggplot(aes(x = date, y = amount, color = party)) + geom_jitter(aes(size = amount), show.legend = FALSE) +               scale_y_log10() + scale_color_manual(breaks = c("8", "6", "4"),
-                        values=c("blue", "green", "red")) +
-  labs(title = "Harvard Employee Constituency '05-'06", 
-       subtitle = "by quarter", 
+  ggplot(aes(x = date, y = amount, color = party)) + geom_jitter(aes(size = amount, alpha = .7), show.legend = FALSE) +               scale_y_log10() + 
+  scale_color_manual(breaks = c("8", "6", "4", "5"),
+                        values=c("blue", "orange", "green", "red")) +
+  labs(title = "Harvard Employee Political Constituency '05-'06", 
+       subtitle = "partisan and non-partisan recipients", 
        caption = "Source data courtesy of the FEC")+
   xlab("Date of Donation") +
   ylab("Amount Donated (USD)")
 q5
 
-
-  
-  
-  
 ```
 
 

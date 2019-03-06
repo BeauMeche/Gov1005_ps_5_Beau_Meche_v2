@@ -26,13 +26,15 @@ download.file(url = "https://www.fec.gov/files/bulk-downloads/2006/weball06.zip"
 x <- read_delim("weball06.zip", delim = "|", col_names = FALSE) %>%
   
   #transmute the cols that we need and assign the relevant names
+  #col references are tricky and are found in the data explanation 
+  # on the download website
   transmute(cand_id = X1,
             cand_name = X2, 
             party = X5, 
             cash = X11,
             cand_state = X19
             )
-#delete file for memory and smoothness of running the file
+#delete file for memory and ease of running this file later
 file_delete("weball06.zip")
 
 ```
@@ -40,17 +42,25 @@ file_delete("weball06.zip")
 #Question 1
 ```{r echo=FALSE, message=FALSE}
 ML1 <- x %>%
+  # we are looking at states
   group_by(cand_state) %>%
   count() %>%
+  # want the largest values first
   arrange(desc(n)) %>%
   ungroup() %>%
+  # select the row value that we want now that the tibble is only states and integers
   slice(3)
 
 ML2 <- x %>%
+  # create a col of name lengths
   mutate(name_length = str_length(cand_name)) %>%
+  # look at the longest ones first
   arrange(desc(name_length)) %>%
+  # create a col of names that are normally capitalized for name uses
   mutate(nice_name = str_to_title(cand_name)) %>%
+  # break up the legal document format of the name into first and last 
   separate(nice_name, into = c("last_n", "first_n"), sep = ",") %>%
+  # "stick" the names back together in a homogeneous form
   mutate(full_name = paste(first_n, last_n)) %>%
   ungroup() %>%
   slice(5)
@@ -89,7 +99,7 @@ q2 <- x %>%
   fmt_currency(vars(party_cash), currency = "USD") %>%
   cols_label(party = "Party", 
              party_cash = "Donation Totals") %>%
-  tab_header("Donations to the 5 Largest Parties (in USD)") %>%
+  tab_header("Total Donations to the 5 Largest Parties (USD)") %>%
   tab_source_note("Source data courtesy of the FEC")
 q2
 ```
